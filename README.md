@@ -1,4 +1,4 @@
-# sequenceStatistic
+# SNVstatistic
 
 This program will count the number of specific type base pairs([ATCG]|[ATCG]|[ATCG]) from a .SNV file and output a .txt file contains the statistic information. And you can also choose to draw a bar chart for a type. Statistic information includes number and ratio.
 

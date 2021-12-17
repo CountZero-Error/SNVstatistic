@@ -1,5 +1,4 @@
 class sequenceStatisticTools():
-    # Last update: 2021-12-15 18:00:59
 
     def __init__(self) -> None:
         pass
@@ -43,7 +42,8 @@ class sequenceStatisticTools():
         dict[key]['happens'] += int(happens)
         dict[key]['depth'] += int(depth)
 
-    def writeFile(self, out, dict, dictName):
+    def writeFile(self, out, dict, dictName, fileName):
+        print(f'Writting to {fileName}...')
         out.write(f'\nStatistic {dictName}:\n')
         self.dictPrint(dict, out)
         self.total(dict, out)

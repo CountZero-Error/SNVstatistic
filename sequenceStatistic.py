@@ -4,6 +4,7 @@
 import re, os, argparse, time
 from sequenceStatisticTools import *
 from drawChart import *
+from classification import *
 
 parse = argparse.ArgumentParser(description='This program allows to use at most 10 conditions only!')
 parse.add_argument('-I', '--input_folder_path', required=True, type=str, help='Enter the path of input file.')
@@ -18,6 +19,7 @@ conditionsFile = args.conditions_file_path
 drawBarChart = args.draw_bar_chart
 regex = re.compile(r'([ATCG])\|([ATCG])\|([ATCG])\s(\w*)\s.\s(\w*)')
 statistics = sequenceStatisticTools()
+Classify = classification()
 
 # Create 10 dictionaries.
 dict1 = {}
@@ -34,6 +36,11 @@ dict10 = {}
 dicts = [dict1, dict2, dict3, dict4, dict5, dict6, dict7, dict8, dict9, dict10]
 # Anomaly list.
 anomaly = []
+# Base_switching_mutation&Base_transversion_mutation.txt.
+AChappens = {}
+ACdepth = {}
+OTHERShappens = {}
+OTHERSdepth = {}
 
 # Read from conditions file(preprocessing).
 conditions, conditionsName = statistics.perprocessing(conditionsFile)
@@ -61,12 +68,16 @@ for file in os.listdir(inputFolder):
 
                 elif matched == None:
                     anomaly.append(line)
+            
+            AChappens, ACdepth, OTHERShappens, OTHERSdepth = Classify.classify(AChappens, ACdepth, OTHERShappens, OTHERSdepth, A, B, C, matched.group(4), matched.group(5))
         
     # Finish.
     print('Finish.\n\n\n')
     time.sleep(1)
     print('Writting to file...')
 
+    # Base_switching_mutation&Base_transversion_mutation.txt.
+    Classify.classificationFile(AChappens, ACdepth, OTHERShappens, OTHERSdepth, output)
     # Results.
     fileName = os.path.basename(file)
     outputFile = os.path.join(output, f'{fileName[:-4]}_statistic.txt')

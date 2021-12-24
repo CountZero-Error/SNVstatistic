@@ -59,43 +59,44 @@ class classification:
         for dv in depth.values():
             totaldepth += dv
 
-        with open(os.path.join(self.out, f'Base_switching_mutation&Base_transversion_mutation_{file}.txt'), 'a') as out:
+        with open(os.path.join(self.out, f'BSM&BTM_{file[:-4]}.txt'), 'a', encoding='utf-8') as out:
             if BSMornot and diffornot:
                 out.write('Base switching mutation(A != B)\n')
                 for k, v in happens.items():
                     out.write(f'{k}: happens-{v} depth-{depth[k]} ratio-{v/depth[k]}\n')
-                out.write(f'Total happens: {happens}\n')
-                out.write(f'Total depth: {depth}\n')
+                out.write(f'Total happens: {totalhappens}\n')
+                out.write(f'Total depth: {totaldepth}\n')
                 out.write(f'Total ratio: {totalhappens/totaldepth}\n\n')
             
             elif BSMornot and diffornot == False:
                 out.write('Base switching mutation(A == B)\n')
                 for k, v in happens.items():
                     out.write(f'{k}: happens-{v} depth-{depth[k]} ratio-{v/depth[k]}\n')
-                out.write(f'Total happens: {happens}\n')
-                out.write(f'Total depth: {depth}\n')
+                out.write(f'Total happens: {totalhappens}\n')
+                out.write(f'Total depth: {totaldepth}\n')
                 out.write(f'Total ratio: {totalhappens/totaldepth}\n\n')
             
             elif BSMornot == False and diffornot:
                 out.write('Base transversion mutation(A != B)\n')
                 for k, v in happens.items():
                     out.write(f'{k}: happens-{v} depth-{depth[k]} ratio-{v/depth[k]}\n')
-                out.write(f'Total happens: {happens}\n')
-                out.write(f'Total depth: {depth}\n')
+                out.write(f'Total happens: {totalhappens}\n')
+                out.write(f'Total depth: {totaldepth}\n')
                 out.write(f'Total ratio: {totalhappens/totaldepth}\n\n')
 
             else:
                 out.write('Base transversion mutation(A == B)\n')
                 for k, v in happens.items():
                     out.write(f'{k}: happens-{v} depth-{depth[k]} ratio-{v/depth[k]}\n')
-                out.write(f'Total happens: {happens}\n')
-                out.write(f'Total depth: {depth}\n')
+                out.write(f'Total happens: {totalhappens}\n')
+                out.write(f'Total depth: {totaldepth}\n')
                 out.write(f'Total ratio: {totalhappens/totaldepth}\n\n')
 
 # Test
 if __name__ == '__main__':
-    import sys, re, os
+    import sys, re, os, time
     from classification import *
+    from drawChart import *
 
     inputFolder = sys.argv[1]
     outputPath = sys.argv[2]
@@ -110,11 +111,13 @@ if __name__ == '__main__':
     OTHERSdepth = {}
     diffOTHERShappens = {}
     diffOTHERSdepth = {}
-    Classify = classification(BSMhappens, BSMdepth, diffBSMhappens, diffBSMdepth, OTHERShappens, OTHERSdepth, diffOTHERShappens, diffOTHERSdepth)
+    Classify = classification(BSMhappens, BSMdepth, diffBSMhappens, diffBSMdepth, OTHERShappens, OTHERSdepth, diffOTHERShappens, diffOTHERSdepth, outputPath)
+    chart = drawChart()
 
     files = os.listdir(inputFolder)
     for file in files:
         print(f'Processing file - {file}')
+        time.sleep(0.5)
         with open(os.path.join(inputFolder, file)) as filo:
             for line in filo:
                 print(f'  Processing line - {line}')
@@ -128,8 +131,11 @@ if __name__ == '__main__':
 
                     BSMhappens, BSMdepth, diffBSMhappens, diffBSMdepth, OTHERShappens, OTHERSdepth, diffOTHERShappens, diffOTHERSdepth = Classify.classify(A, B, C, matched.group(4), matched.group(5))
 
-    print('Generating files...')    
-    Classify.classificationFile(BSMhappens, BSMdepth, True, False, file)
-    Classify.classificationFile(diffBSMhappens, diffBSMdepth, True, True, file)
-    Classify.classificationFile(OTHERShappens, OTHERSdepth, False, False, file)
-    Classify.classificationFile(diffOTHERShappens, diffOTHERSdepth, False, True, file)
+            print('Generating files...')    
+            Classify.classificationFile(BSMhappens, BSMdepth, True, False, file)
+            chart.drawBSMandBTM(BSMhappens, BSMdepth, True, file, outputPath)
+            Classify.classificationFile(diffBSMhappens, diffBSMdepth, True, True, file)
+            Classify.classificationFile(OTHERShappens, OTHERSdepth, False, False, file)
+            chart.drawBSMandBTM(OTHERShappens, OTHERSdepth, False, file, outputPath)
+            Classify.classificationFile(diffOTHERShappens, diffOTHERSdepth, False, True, file)
+            time.sleep(0.5)

@@ -19,6 +19,7 @@ conditionsFile = args.conditions_file_path
 drawBarChart = args.draw_bar_chart
 regex = re.compile(r'([ATCG])\|([ATCG])\|([ATCG])\s(\w*)\s.\s(\w*)')
 statistics = sequenceStatisticTools()
+chart = drawChart()
 
 # Create 10 dictionaries.
 dict1 = {}
@@ -44,7 +45,8 @@ OTHERShappens = {}
 OTHERSdepth = {}
 diffOTHERShappens = {}
 diffOTHERSdepth = {}
-Classify = classification(BSMhappens, BSMdepth, diffBSMhappens, diffBSMdepth, OTHERShappens, OTHERSdepth, diffOTHERShappens, diffOTHERSdepth)
+os.mkdir(os.path.join(output, 'BSM&BTM'))
+Classify = classification(BSMhappens, BSMdepth, diffBSMhappens, diffBSMdepth, OTHERShappens, OTHERSdepth, diffOTHERShappens, diffOTHERSdepth, os.path.join(output, 'BSM&BTM'))
 
 # Read from conditions file(preprocessing).
 conditions, conditionsName = statistics.perprocessing(conditionsFile)
@@ -73,7 +75,8 @@ for file in os.listdir(inputFolder):
                 elif matched == None:
                     anomaly.append(line)
             
-            BSMhappens, BSMdepth, diffBSMhappens, diffBSMdepth, OTHERShappens, OTHERSdepth, diffOTHERShappens, diffOTHERSdepth = Classify.classify(A, B, C, matched.group(4), matched.group(5))
+            if matched != None:
+                BSMhappens, BSMdepth, diffBSMhappens, diffBSMdepth, OTHERShappens, OTHERSdepth, diffOTHERShappens, diffOTHERSdepth = Classify.classify(A, B, C, matched.group(4), matched.group(5))
         
     # Finish.
     print('Finish.\n\n\n')
@@ -82,8 +85,10 @@ for file in os.listdir(inputFolder):
 
     # Base_switching_mutation&Base_transversion_mutation.txt.
     Classify.classificationFile(BSMhappens, BSMdepth, True, False, file)
+    chart.drawBSMandBTM(BSMhappens, BSMdepth, True, file, os.path.join(output, 'BSM&BTM'))
     Classify.classificationFile(diffBSMhappens, diffBSMdepth, True, True, file)
     Classify.classificationFile(OTHERShappens, OTHERSdepth, False, False, file)
+    chart.drawBSMandBTM(OTHERShappens, OTHERSdepth, False, file, os.path.join(output, 'BSM&BTM'))
     Classify.classificationFile(diffOTHERShappens, diffOTHERSdepth, False, True, file)
 
     # Results.
@@ -106,7 +111,6 @@ for file in os.listdir(inputFolder):
                 if Draw:
                     conditionsList = chartRequired.split('/')
                     if 'A==B' in conditionsList:
-                        chart = drawChart()
                         chart.drawing(dicts[i], os.path.basename(file), output, 'A->C', conditionsName[i])
                 time.sleep(1)
                 
@@ -115,7 +119,6 @@ for file in os.listdir(inputFolder):
                 if Draw:
                     conditionsList = chartRequired.split('/')
                     if conditions[i].replace(' ','') in conditionsList:
-                        chart = drawChart()
                         chart.drawing(dicts[i], os.path.basename(file), output, conditions[i], conditionsName[i])
                 time.sleep(1)
 

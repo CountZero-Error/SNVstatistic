@@ -100,7 +100,6 @@ if __name__ == '__main__':
     inputFolder = sys.argv[1]
     outputPath = sys.argv[2]
 
-    Classify = classification()
     regex = re.compile(r'([ATCG])\|([ATCG])\|([ATCG])\s(\w*)\s.\s(\w*)')
 
     BSMhappens = {}
@@ -129,9 +128,8 @@ if __name__ == '__main__':
 
                     BSMhappens, BSMdepth, diffBSMhappens, diffBSMdepth, OTHERShappens, OTHERSdepth, diffOTHERShappens, diffOTHERSdepth = Classify.classify(A, B, C, matched.group(4), matched.group(5))
 
-    print('Generating file...')    
+    print('Generating files...')    
     Classify.classificationFile(BSMhappens, BSMdepth, True, False, file)
     Classify.classificationFile(diffBSMhappens, diffBSMdepth, True, True, file)
     Classify.classificationFile(OTHERShappens, OTHERSdepth, False, False, file)
     Classify.classificationFile(diffOTHERShappens, diffOTHERSdepth, False, True, file)
-    

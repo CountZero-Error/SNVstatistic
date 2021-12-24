@@ -111,7 +111,7 @@ for file in os.listdir(inputFolder):
                 if Draw:
                     conditionsList = chartRequired.split('/')
                     if 'A==B' in conditionsList:
-                        chart.drawing(dicts[i], os.path.basename(file), output, 'A->C', conditionsName[i])
+                        chart.drawing(dicts[i], os.path.basename(file), output, 'A→C', conditionsName[i])
                 time.sleep(1)
                 
             else:

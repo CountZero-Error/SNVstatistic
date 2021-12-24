@@ -29,7 +29,6 @@ class drawChart():
         plt.bar(x=nameList, height=ratioList, width=0.5)
         plt.xticks(rotation=45)
         plt.ylabel('Ratio', fontsize=10)
-        plt.xlabel(condition, fontsize=10)
         plt.title(f'{title}_{fileName}', fontsize=10)
         plt.tight_layout()
         plt.savefig(os.path.join(outputPath, f'{title[:-4]}_{fileName}.png'))
@@ -49,7 +48,8 @@ class drawChart():
         print('Processing data...')
         for k, v in happens.items():
             ratio = int(v)/int(depth[k])
-            nameList.append(k)
+            name = f'{k[0]}→{k[-1]}'
+            nameList.append(name)
             ratioList.append(ratio)
 
         if isBSM:

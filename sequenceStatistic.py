@@ -19,7 +19,6 @@ conditionsFile = args.conditions_file_path
 drawBarChart = args.draw_bar_chart
 regex = re.compile(r'([ATCG])\|([ATCG])\|([ATCG])\s(\w*)\s.\s(\w*)')
 statistics = sequenceStatisticTools()
-Classify = classification()
 
 # Create 10 dictionaries.
 dict1 = {}
@@ -37,10 +36,15 @@ dicts = [dict1, dict2, dict3, dict4, dict5, dict6, dict7, dict8, dict9, dict10]
 # Anomaly list.
 anomaly = []
 # Base_switching_mutation&Base_transversion_mutation.txt.
-AChappens = {}
-ACdepth = {}
+BSMhappens = {}
+BSMdepth = {}
+diffBSMhappens = {}
+diffBSMdepth = {}
 OTHERShappens = {}
 OTHERSdepth = {}
+diffOTHERShappens = {}
+diffOTHERSdepth = {}
+Classify = classification(BSMhappens, BSMdepth, diffBSMhappens, diffBSMdepth, OTHERShappens, OTHERSdepth, diffOTHERShappens, diffOTHERSdepth)
 
 # Read from conditions file(preprocessing).
 conditions, conditionsName = statistics.perprocessing(conditionsFile)
@@ -69,7 +73,7 @@ for file in os.listdir(inputFolder):
                 elif matched == None:
                     anomaly.append(line)
             
-            AChappens, ACdepth, OTHERShappens, OTHERSdepth = Classify.classify(AChappens, ACdepth, OTHERShappens, OTHERSdepth, A, B, C, matched.group(4), matched.group(5))
+            BSMhappens, BSMdepth, diffBSMhappens, diffBSMdepth, OTHERShappens, OTHERSdepth, diffOTHERShappens, diffOTHERSdepth = Classify.classify(A, B, C, matched.group(4), matched.group(5))
         
     # Finish.
     print('Finish.\n\n\n')
@@ -77,7 +81,11 @@ for file in os.listdir(inputFolder):
     print('Writting to file...')
 
     # Base_switching_mutation&Base_transversion_mutation.txt.
-    Classify.classificationFile(AChappens, ACdepth, OTHERShappens, OTHERSdepth, output)
+    Classify.classificationFile(BSMhappens, BSMdepth, True, False, file)
+    Classify.classificationFile(diffBSMhappens, diffBSMdepth, True, True, file)
+    Classify.classificationFile(OTHERShappens, OTHERSdepth, False, False, file)
+    Classify.classificationFile(diffOTHERShappens, diffOTHERSdepth, False, True, file)
+
     # Results.
     fileName = os.path.basename(file)
     outputFile = os.path.join(output, f'{fileName[:-4]}_statistic.txt')
@@ -94,7 +102,7 @@ for file in os.listdir(inputFolder):
 
         for i in range(len(conditionsName)):
             if conditionsName[i] == 'AeB':
-                statistics.writeFile(out, dicts[i], 'A->C', outputFile)
+                statistics.writeFile(out, dicts[i], 'A→C', outputFile)
                 if Draw:
                     conditionsList = chartRequired.split('/')
                     if 'A==B' in conditionsList:

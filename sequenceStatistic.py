@@ -67,7 +67,7 @@ for file in os.listdir(inputFolder):
             for i in range(len(conditions)):
                 if matched != None and eval(conditions[i]):
                     if conditions[i] == 'A == B':
-                        key = f'{A}->{C}'
+                        key = f'{A}→{C}'
                     else:
                         key = f'{A}|{B}|{C}'
                     statistics.statistic(dicts[i], key, matched.group(4), matched.group(5))

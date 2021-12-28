@@ -21,21 +21,6 @@ regex = re.compile(r'([ATCG])\|([ATCG])\|([ATCG])\s(\w*)\s.\s(\w*)')
 statistics = sequenceStatisticTools()
 chart = drawChart()
 
-# Create 10 dictionaries.
-dict1 = {}
-dict2 = {}
-dict3 = {}
-dict4 = {}
-dict5 = {}
-dict6 = {}
-dict7 = {}
-dict8 = {}
-dict9 = {}
-dict10 = {}
-# Store dictionaries in a list.
-dicts = [dict1, dict2, dict3, dict4, dict5, dict6, dict7, dict8, dict9, dict10]
-# Anomaly list.
-anomaly = []
 # Base_switching_mutation&Base_transversion_mutation.txt.
 BSMhappens = {}
 BSMdepth = {}
@@ -45,14 +30,28 @@ OTHERShappens = {}
 OTHERSdepth = {}
 diffOTHERShappens = {}
 diffOTHERSdepth = {}
-os.mkdir(os.path.join(output, 'BSM&BTM'))
+try:
+    os.mkdir(os.path.join(output, 'BSM&BTM'))
+except FileExistsError:
+    pass
 Classify = classification(BSMhappens, BSMdepth, diffBSMhappens, diffBSMdepth, OTHERShappens, OTHERSdepth, diffOTHERShappens, diffOTHERSdepth, os.path.join(output, 'BSM&BTM'))
 
 # Read from conditions file(preprocessing).
 conditions, conditionsName = statistics.perprocessing(conditionsFile)
 
+# Create dictionaries.
+dicts = []
+for i in range(len(conditions)):
+    dicti = {}
+    dicts.append(dicti)
+    
+# Anomaly list.
+anomaly = []
+
 # Statistic
 for file in os.listdir(inputFolder):
+    totalHappens = 0
+    totalDepth = 0    
     with open(os.path.join(inputFolder, file)) as filo:
         for line in filo:
             print(f'Processing line...{line}')
@@ -60,9 +59,13 @@ for file in os.listdir(inputFolder):
             
             # A|B|C
             if matched != None:
+
                 A = matched.group(1)
                 B = matched.group(2)
                 C = matched.group(3)
+
+                totalHappens += int(matched.group(4))
+                totalDepth += int(matched.group(5))
             
             for i in range(len(conditions)):
                 if matched != None and eval(conditions[i]):
@@ -90,6 +93,7 @@ for file in os.listdir(inputFolder):
     Classify.classificationFile(OTHERShappens, OTHERSdepth, False, False, file)
     chart.drawBSMandBTM(OTHERShappens, OTHERSdepth, False, file, os.path.join(output, 'BSM&BTM'))
     Classify.classificationFile(diffOTHERShappens, diffOTHERSdepth, False, True, file)
+    chart.summaryBSMandBTM(BSMhappens, BSMdepth, OTHERShappens, OTHERSdepth, file, os.path.join(output, 'BSM&BTM'))
 
     # Results.
     fileName = os.path.basename(file)
@@ -121,6 +125,11 @@ for file in os.listdir(inputFolder):
                     if conditions[i].replace(' ','') in conditionsList:
                         chart.drawing(dicts[i], os.path.basename(file), output, conditions[i], conditionsName[i])
                 time.sleep(1)
+        
+        # Summary.
+        out.write('\nSummary\n')
+        out.write(f'Total happens: {totalHappens}\n')
+        out.write(f'Total depth: {totalDepth}\n')
 
         # Unmatched
         out.write(f'\nUnmatched: \n')

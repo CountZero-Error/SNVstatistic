@@ -138,4 +138,5 @@ if __name__ == '__main__':
             Classify.classificationFile(OTHERShappens, OTHERSdepth, False, False, file)
             chart.drawBSMandBTM(OTHERShappens, OTHERSdepth, False, file, outputPath)
             Classify.classificationFile(diffOTHERShappens, diffOTHERSdepth, False, True, file)
+            chart.summaryBSMandBTM(BSMhappens, BSMdepth, OTHERShappens, OTHERSdepth, file, outputPath)
             time.sleep(0.5)

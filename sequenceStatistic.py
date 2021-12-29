@@ -6,7 +6,7 @@ from sequenceStatisticTools import *
 from drawChart import *
 from classification import *
 
-parse = argparse.ArgumentParser(description='This program allows to use at most 10 conditions only!')
+parse = argparse.ArgumentParser()
 parse.add_argument('-I', '--input_folder_path', required=True, type=str, help='Enter the path of input file.')
 parse.add_argument('-O', '--output_folder_path', required=True, type=str, help='Enter the path of output file.')
 parse.add_argument('-conditions', '--conditions_file_path', required=True, type=str, help='Enter the path of file contains conditions you need.')

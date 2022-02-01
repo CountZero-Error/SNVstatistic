@@ -13,7 +13,7 @@ class classification:
         self.out = out
     
     # Classify Base switching mutation & Base transversion mutation.
-    def classify(self, A, B, C, matched_group4, matched_group5,):
+    def classify(self, A, B, C, matched_group4, matched_group5):
         base_switching_mutation = ['AG', 'GA', 'CT', 'TC']
 
         if len(A) == 1 and len(B) == 1 and len(C) == 1:

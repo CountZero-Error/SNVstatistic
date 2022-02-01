@@ -14,7 +14,7 @@ Usage:
         NC_000067.7	4284731	4284732	A|A|G	1	.	1	2  
         NC_000067.7	4595607	4595608	T|T|G	1	.	1	1  
   
-  Conditions file example(10 conditions at most):  
+  Conditions file example:  
         # This is a comment. If you need to write something irrelevant to the conditions, write a '#' in the begining.  
         # equal to -> '==' .  
         # not equal to -> '!='.  

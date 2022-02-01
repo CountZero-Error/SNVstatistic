@@ -3,7 +3,7 @@
 This program will count the number of specific type base pairs([ATCG]|[ATCG]|[ATCG]) from a .SNV file and output a .txt file contains the statistic information. And you can also choose to draw a bar chart for a type. Statistic information includes number and ratio.
 
 Usage:  
-  python3 sequenceStatistic.py -I INPUT_FOLDER_PATH -O OUTPUT_FOLDER_PATH -conditions CONDITIONS_FILE_PATH -draw(optional) A!=B  
+  python3 sequenceStatistic.py -I INPUT_FOLDER_PATH -O OUTPUT_FOLDER_PATH -conditions CONDITIONS_FILE_PATH -draw(optional) A!=B/A==C  
   
   Input file contents example:  
         NC_000067.7	3701017	3701018	T|T|G	1	.	4	1  
@@ -14,7 +14,7 @@ Usage:
         NC_000067.7	4284731	4284732	A|A|G	1	.	1	2  
         NC_000067.7	4595607	4595608	T|T|G	1	.	1	1  
   
-  Conditions file example:  
+  Conditions file example(.txt):  
         # This is a comment. If you need to write something irrelevant to the conditions, write a '#' in the begining.  
         # equal to -> '==' .  
         # not equal to -> '!='.  
